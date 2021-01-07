@@ -1,14 +1,15 @@
-﻿namespace  InputTouchLogic
+﻿using UnityEngine;
+
+namespace  InputTouchLogic
 {
     public class ScreenSize
     {
-        public float Height { get; set; } 
-        public float Width { get; set; }
+        public float ScreenCenter { get; set; }
+        public Vector3 StageDimensions { get; set; }
 
-        public ScreenSize(float height, float width)
+        public ScreenSize(float screenCenter)
         {
-            Height = height;
-            Width = width;
+            ScreenCenter = screenCenter;
         }
     }
 }
