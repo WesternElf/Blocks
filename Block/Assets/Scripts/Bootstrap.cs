@@ -1,8 +1,6 @@
-﻿using System;
-using BlocksLogic;
+﻿using BlocksLogic.Pool;
 using InputTouchLogic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class Bootstrap : MonoBehaviour
 {
@@ -11,8 +9,8 @@ public class Bootstrap : MonoBehaviour
     [SerializeField]
     private BallBehaviour ballBehaviour;
     [SerializeField] 
-    private PointsToSpawn pointsToSpawn;
-
+    private BlockSpawner blockSpawner;
+    
     private ScreenSize screenSize;
 
     private void Awake()
@@ -21,7 +19,7 @@ public class Bootstrap : MonoBehaviour
         
         inputTouchController.Init(screenSize);
         ballBehaviour.Init(screenSize, inputTouchController);
-        pointsToSpawn.Init(screenSize);
+        blockSpawner.Init(screenSize);
     }
 
     private void CreateServices()
