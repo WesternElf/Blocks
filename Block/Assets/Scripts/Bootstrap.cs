@@ -1,4 +1,5 @@
 ﻿using System;
+using BlocksLogic;
 using InputTouchLogic;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -7,8 +8,10 @@ public class Bootstrap : MonoBehaviour
 {
     [SerializeField] 
     private InputTouchController inputTouchController;
-    [FormerlySerializedAs("ballMovement")] [SerializeField]
+    [SerializeField]
     private BallBehaviour ballBehaviour;
+    [SerializeField] 
+    private PointsToSpawn pointsToSpawn;
 
     private ScreenSize screenSize;
 
@@ -18,6 +21,7 @@ public class Bootstrap : MonoBehaviour
         
         inputTouchController.Init(screenSize);
         ballBehaviour.Init(screenSize, inputTouchController);
+        pointsToSpawn.Init(screenSize);
     }
 
     private void CreateServices()

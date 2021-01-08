@@ -19,12 +19,18 @@ namespace InputTouchLogic
         {
             this.screenSize = screenSize;
             
-            screenSize.StageDimensions = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height,0));
-            Debug.Log(screenSize.StageDimensions.x);
+            screenSize.ScreenBorders = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height,0));
+            //Debug.Log(screenSize.ScreenBorders.x);
         }
 
         private void FixedUpdate()
         {
+            if (Input.GetMouseButton(0))
+            {
+                screenScaleFactor = Input.mousePosition.x >= screenSize.ScreenCenter ? 1 : -1;
+                OnPressed?.Invoke(screenScaleFactor);
+            }
+            
             if (Input.touchCount<=0)
                 return;
             
@@ -38,11 +44,7 @@ namespace InputTouchLogic
             }
 
 
-            if (Input.GetMouseButton(0))
-            {
-                screenScaleFactor = Input.mousePosition.x >= screenSize.ScreenCenter ? 1 : -1;
-                OnPressed?.Invoke(screenScaleFactor);
-            }
+            
         }
     }
 }

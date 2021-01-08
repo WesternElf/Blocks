@@ -21,7 +21,6 @@ public class BallBehaviour : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log(other.name);
         var block = other.GetComponent<IDestructable>();
         if (block==null) return;
     }
@@ -30,8 +29,8 @@ public class BallBehaviour : MonoBehaviour
     {
         colliderRadius = collider.radius;
         
-        leftBorder = -screenSize.StageDimensions.x + colliderRadius;
-        rightBorder = screenSize.StageDimensions.x - colliderRadius;
+        leftBorder = -screenSize.ScreenBorders.x + colliderRadius;
+        rightBorder = screenSize.ScreenBorders.x - colliderRadius;
     }
 
     private void MoveBall(int screenPositionScale)
