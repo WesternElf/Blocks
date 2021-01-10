@@ -2,7 +2,7 @@
 using Interfaces;
 using UnityEngine;
 
-namespace BlocksLogic
+namespace BlocksLogic.Pool
 {
     public class PointsToSpawn
     {
@@ -13,7 +13,6 @@ namespace BlocksLogic
         public PointsToSpawn(ScreenSize screenSize)
         {
             this.screenSize = screenSize;
-            //GetPointsToSpawnTransforms();
         }
 
         public Vector2 GetPointsToSpawnTransforms(int blockCount)
@@ -35,13 +34,6 @@ namespace BlocksLogic
                     + margin * blockNum,
                     screenSize.ScreenBorders.y + 0.75f
                 );
-//                Debug.Log(newPointPosition.x);
-                //var newBlock = Instantiate(prefab, newPointPosition, Quaternion.identity);
-                // var blockScale = newBlock.transform.localScale;
-                // blockScale.x = blockSize;
-                // newBlock.transform.localScale = blockScale;
-                //
-                // newBlock.GetComponent<BlockBehaviour>().Init(screenSize);
 
                 return newPointPosition;
         }

@@ -4,9 +4,9 @@ namespace BlocksLogic.Pool
 {
     public class PoolableObject : MonoBehaviour
     {
-        private BlockPooler pool;
+        private ObjectPooler pool;
 
-        public void SetPool(BlockPooler pool)
+        public void SetPool(ObjectPooler pool)
         {
             this.pool = pool;
         }

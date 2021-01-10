@@ -20,7 +20,6 @@ namespace InputTouchLogic
             this.screenSize = screenSize;
             
             screenSize.ScreenBorders = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height,0));
-            //Debug.Log(screenSize.ScreenBorders.x);
         }
 
         private void FixedUpdate()
@@ -40,7 +39,7 @@ namespace InputTouchLogic
             {
                 screenScaleFactor = touch.position.x >= screenSize.ScreenCenter ? 1 : -1;
                 OnPressed?.Invoke(screenScaleFactor);
-                Debug.Log(touch.position.x < screenSize.ScreenCenter ? "Left" : "Right");
+                //Debug.Log(touch.position.x < screenSize.ScreenCenter ? "Left" : "Right");
             }
 
 

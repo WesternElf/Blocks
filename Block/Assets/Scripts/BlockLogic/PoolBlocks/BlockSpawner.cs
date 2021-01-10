@@ -1,33 +1,45 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using GameLogic;
 using InputTouchLogic;
 using Interfaces;
+using Particles;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace BlocksLogic.Pool
 {
-    public class BlockSpawner : MonoBehaviour, IInitiable<ScreenSize>
+    public class BlockSpawner : MonoBehaviour, IInitiable<ScreenSize, ParticleSpawner>
     {
         [SerializeField] 
-        private Color[] colors;
+        private DifficultyGrowingManager difficultyGrowingManager;
         [SerializeField] 
-        private GameObject blockPrefab;
-        [SerializeField] 
-        private int blocksCount;
-        [SerializeField]
-        private float spawnDelay;
+        private BlockParams blockParams;
         private PointsToSpawn pointsToSpawn;
         private ScreenSize screenSize;
         private Transform randomPoint;
-        private BlockPooler pool;
+        private ObjectPooler pool;
+        private ParticleSpawner particleSpawner;
+        private GameParams gameParams;
+        
+        public event Action OnGameOver;
 
-        public void Init(ScreenSize screenSize)
+        public void Init(ScreenSize screenSize, ParticleSpawner particleSpawner)
         {
             this.screenSize = screenSize;
+            this.particleSpawner = particleSpawner;
+          
+            InitGameParams();
             
             pointsToSpawn = new PointsToSpawn(screenSize);
-            pool = new BlockPooler(blockPrefab, blocksCount);
+            pool = new ObjectPooler(blockParams.blockPrefab, blockParams.blocksCount);
 
             StartCoroutine(BlocksSpawner());
+        }
+
+        private void Update()
+        {
+            difficultyGrowingManager.Timer();
         }
 
         private IEnumerator BlocksSpawner()
@@ -36,23 +48,28 @@ namespace BlocksLogic.Pool
             {
                 SpawnBlock(pool);
                 yield return new WaitForSeconds(
-                    spawnDelay
-                       //0.5f + Mathf.Abs(Mathf.Sin(Time.time))
-                       // 0.5f + Mathf.PerlinNoise(Time.time, 0.0f)
-                    );
+                    gameParams.spawnDelay
+                );
             }
 
         }
-
-        private void SpawnBlock(BlockPooler blockPooler)
+        
+        public void InitGameParams()
         {
-            var pooledObject = blockPooler.GetObject();
-            var randomPoint = pointsToSpawn.GetPointsToSpawnTransforms(blocksCount);
+            gameParams = new GameParams {blockSpeed = 2f, spawnDelay = 2f};
+            difficultyGrowingManager.Init(gameParams);
+        }
+
+        private void SpawnBlock(ObjectPooler objectPooler)
+        {
+            var pooledObject = objectPooler.GetObject();
+            var randomPoint = pointsToSpawn.GetPointsToSpawnTransforms(blockParams.blocksCount);
 
             pooledObject.transform.position = randomPoint;
-            
-            pooledObject.GetComponent<BlockBehaviour>().Init(screenSize);
 
+            var block = pooledObject.GetComponent<BlockBehaviour>();
+            block.Init(screenSize, particleSpawner, gameParams);
+            block.OnBlockKilledPlayer += () => OnGameOver?.Invoke();
             SetRandomColor(pooledObject);
             pooledObject.SetActive(true);
         }
@@ -60,14 +77,14 @@ namespace BlocksLogic.Pool
         private void SetRandomColor(GameObject blockObject)
         {
             var color = blockObject.GetComponent<SpriteRenderer>().color;
-            color = colors[Random.Range(0, colors.Length-1)];
+            color = blockParams.blockColors[Random.Range(0, blockParams.blockColors.Length-1)];
             color.a = 1;
             blockObject.GetComponent<SpriteRenderer>().color = color;
         }
-       
+
         public void ClearPool()
         {
-            PoolableObject[] blocks = FindObjectsOfType<PoolableObject>();
+            var blocks = FindObjectsOfType<PoolableObject>();
 
             foreach (var block in blocks)
             {
@@ -77,5 +94,13 @@ namespace BlocksLogic.Pool
                 }
             }
         }
+    }
+
+    [Serializable]
+    public class BlockParams
+    {
+        public Color[] blockColors;
+        public GameObject blockPrefab;
+        public int blocksCount;
     }
 }

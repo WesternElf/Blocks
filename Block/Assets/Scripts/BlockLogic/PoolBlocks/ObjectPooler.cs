@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace BlocksLogic.Pool
 {
-    public class BlockPooler
+    public class ObjectPooler
     {
         private GameObject prefab;
         private Transform objectsParent;
         private List<GameObject> cachedObjects;
     
-        public BlockPooler(GameObject prefab, int initialAmount)
+        public ObjectPooler(GameObject prefab, int initialAmount)
         {
             this.prefab = prefab;
     
